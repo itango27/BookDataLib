@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookDataLib", "BookDataLib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryBookDataLib", "TryBookDataLib\TryBookDataLib.csproj", "{3BA9FF3E-D5B2-4B87-8029-436B5ADBF695}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLib", "..\..\..\exper\Net8\HelperLib\HelperLib\HelperLib.csproj", "{AAA67C15-FCB5-E214-C2EB-11BEEF8BCF86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3BA9FF3E-D5B2-4B87-8029-436B5ADBF695}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BA9FF3E-D5B2-4B87-8029-436B5ADBF695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BA9FF3E-D5B2-4B87-8029-436B5ADBF695}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAA67C15-FCB5-E214-C2EB-11BEEF8BCF86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAA67C15-FCB5-E214-C2EB-11BEEF8BCF86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAA67C15-FCB5-E214-C2EB-11BEEF8BCF86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAA67C15-FCB5-E214-C2EB-11BEEF8BCF86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

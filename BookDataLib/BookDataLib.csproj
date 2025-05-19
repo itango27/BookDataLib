@@ -22,4 +22,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\exper\Net8\HelperLib\HelperLib\HelperLib.csproj" />
+  </ItemGroup>
+
 </Project>

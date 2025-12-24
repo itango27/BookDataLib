@@ -1,4 +1,7 @@
-﻿
+
+using System.IO;
+using System.Text.Json;
+
 namespace BookDataLib.Graph
 {
     public class GraphNode
@@ -15,7 +18,7 @@ namespace BookDataLib.Graph
         public int Source { get; set; }
         public int Target { get; set; }
     }
-    public class MainStateModelBuilder
+    public class StateModelBuilder
     {
         public List<GraphNode> Nodes { get; private set; }
         public List<GraphEdge> Edges { get; private set; }
@@ -23,7 +26,7 @@ namespace BookDataLib.Graph
         private int _nodeIdCounter = 0;
         private Dictionary<string, GraphNode> _nodeLookup;
 
-        public MainStateModelBuilder()
+        public StateModelBuilder()
         {
             Nodes = new List<GraphNode>();
             Edges = new List<GraphEdge>();
@@ -54,8 +57,28 @@ namespace BookDataLib.Graph
         }
         public class StageTransition
         {
-            public string? From { get; set; }
-            public string? To { get; set; }
+            public string? Source { get; set; }
+            public string? Target { get; set; }
+        }
+
+        public static MainStateModel Load(string jsonFilePath)
+        {
+            var json = File.ReadAllText(jsonFilePath);
+            var document = JsonDocument.Parse(json);
+            var root = document.RootElement;
+
+            if (root.TryGetProperty("mainStateModel", out var modelElement))
+            {
+                var modelJson = modelElement.GetRawText();
+                var model = JsonSerializer.Deserialize<MainStateModel>(modelJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return model!;
+            }
+
+            throw new InvalidOperationException("mainStateModel not found in root JSON.");
         }
 
         public void Build(MainStateModel model)
@@ -98,8 +121,8 @@ namespace BookDataLib.Graph
             // Handle cross-stage transitions
             foreach (var t in model.Transitions)
             {
-                var fromStage = t.From;
-                var toStage = t.To;
+                var fromStage = t.Source;
+                var toStage = t.Target;
 
                 var fromNodes = Nodes.Where(n => n.Stage == fromStage).ToList();
                 var toNodes = Nodes.Where(n => n.Stage == toStage).ToList();

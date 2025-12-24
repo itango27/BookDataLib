@@ -1,4 +1,4 @@
-﻿using HelperLib.Helpers;
+using HelperLib.Helpers;
 using HelperLib.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

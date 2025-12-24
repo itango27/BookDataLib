@@ -1,4 +1,4 @@
-﻿using BookDataLib;
+using BookDataLib;
 using BookDataLib.Model;
 using HelperLib.Controllers;
 using HelperLib.Events;
@@ -7,11 +7,14 @@ using HelperLib.Helpers;
 using HelperLib.Repositories;
 using HelperLib.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols;
 using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Windows;
+using System.Windows.Automation;
 using TryBookDataLib.Layout;
 using TryBookDataLib.ViewModels;
 using TryBookDataLib.Views;
@@ -30,12 +33,11 @@ namespace TryBookDataLib
             var assembly = AssemblyHelper.GetAssemblyInfo();
             ServiceLocator.Initialize();
 
-            Controller controller = new Controller();
-            controller.Initialize(assembly.ManifestModule.Name, false);
-            ServiceLocator.AddInstance<Controller>(controller);
-
             EventAggregator2 eventAggregator = new EventAggregator2();
             ServiceLocator.AddInstance<EventAggregator2>(eventAggregator);
+
+            Controller controller = new Controller();
+            ServiceLocator.AddInstance<Controller>(controller);
 
             ProxyFactory proxyFactory = new ProxyFactory();
             ServiceLocator.AddInstance<ProxyFactory>(proxyFactory);
@@ -55,6 +57,8 @@ namespace TryBookDataLib
 
             ServiceLocator.Build();
 
+            controller.Initialize(assembly.ManifestModule.Name, false);
+
 
             var path = Path.Combine(Environment.CurrentDirectory, "BookDataLib.DLL");
             Assembly assy = Assembly.LoadFrom(path);
@@ -67,6 +71,20 @@ namespace TryBookDataLib
 
                 MainWindow win = new MainWindow();
 
+                win.Closing += (s, e) =>
+                {
+                    string storagePath = @".\layout.json";
+                    string json = JsonSerializer.Serialize(vm.Nodes, new JsonSerializerOptions { WriteIndented = true });
+                    if (json != null && json.Length > 2)
+                    {
+                        File.WriteAllText(storagePath, json);
+                    }
+                    //foreach (var item in vm.Nodes)
+                    //{
+                    //    var pos = item.Position;
+                    //    var name = item.Name;
+                    //}
+                };
                 win.Closed += (object sender, EventArgs e) =>
                 {
                     Application.Current.Shutdown();

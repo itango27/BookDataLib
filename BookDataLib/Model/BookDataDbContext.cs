@@ -1,4 +1,4 @@
-﻿using BookDataLib.Model;
+using BookDataLib.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.IO;
@@ -22,7 +22,7 @@ namespace BookDataLib
         public DbSet<NarrativeThread> NarrativeThreads { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Scene> Scenes { get; set; }
-        public DbSet<Event> Events { get; set; }
+        public DbSet<BookEvent> Events { get; set; }
         public DbSet<Conflict> Conflicts { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<CharacterArc> CharacterArcs { get; set; }
@@ -140,13 +140,13 @@ namespace BookDataLib
                 .WithMany(ca => ca.ArcStages)
                 .HasForeignKey(asg => asg.CharacterArcId);
 
-            modelBuilder.Entity<Event>()
+            modelBuilder.Entity<BookEvent>()
                 .HasOne(e => e.Thread)
                 .WithMany(t => t.Events)
                 .HasForeignKey(e => e.ThreadId)
                 .OnDelete(DeleteBehavior.Restrict); // or .NoAction
 
-            modelBuilder.Entity<Event>()
+            modelBuilder.Entity<BookEvent>()
                 .HasOne(e => e.Scene)
                 .WithMany(s => s.Events)
                 .HasForeignKey(e => e.SceneId)

@@ -1,4 +1,4 @@
-﻿// ViewModels/LayoutSettingsViewModel.cs
+// ViewModels/LayoutSettingsViewModel.cs
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 

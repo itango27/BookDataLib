@@ -53,7 +53,7 @@ namespace BookDataLib.Model
         public string Name { get; set; }
         public int PlotId { get; set; }
         public Plot Plot { get; set; }
-        public ICollection<Event> Events { get; set; }
+        public ICollection<BookEvent> Events { get; set; }
     }
 
     public class Chapter
@@ -85,12 +85,12 @@ namespace BookDataLib.Model
         public PacingInfo PacingInfo { get; set; }
 
         public ICollection<Dialogue> Dialogues { get; set; }
-        public ICollection<Event> Events { get; set; }
+        public ICollection<BookEvent> Events { get; set; }
         public ICollection<MotifScene> MotifScenes { get; set; }
         public ICollection<LayerScene> LayerScenes { get; set; }
     }
 
-    public class Event
+    public class BookEvent
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -110,6 +110,7 @@ namespace BookDataLib.Model
         public string Name { get; set; }
         public ICollection<CharacterArc> CharacterArcs { get; set; }
         public ICollection<Dialogue> Dialogues { get; set; }
+        public ICollection<Scene> Scenes { get; set; }
     }
 
     public class CharacterArc
@@ -148,7 +149,7 @@ namespace BookDataLib.Model
         public string Type { get; set; }
         public string Description { get; set; }
         public int EventId { get; set; }
-        public Event Event { get; set; }
+        public BookEvent Event { get; set; }
     }
 
     public class Setting

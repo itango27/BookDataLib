@@ -1,0 +1,77 @@
+﻿<Window x:Class="BookData.Services.Views.PlotSketchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookData.Services.Views"
+        mc:Ignorable="d"
+        Title="PlotSketchWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Button Panel -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="5">
+            <Button Content="Add" Width="70" Margin="2" Click="AddPlotSketchButton_Click"/>
+            <Button Content="Update" Width="70" Margin="2" Click="UpdatePlotSketchButton_Click"/>
+            <Button Content="Delete" Width="70" Margin="2" Click="DeletePlotSketchButton_Click"/>
+        </StackPanel>
+
+        <!-- PlotSketch List -->
+        <ListBox x:Name="SketchesListBox"
+                 Grid.Row="1" Grid.Column="0"
+                 Margin="5"
+                 SelectionChanged="PlotSketchListBox_SelectionChanged"/>
+
+        <!-- GridSplitter -->
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="5"/>
+
+        <!-- Detail Fields -->
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Margin="5" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Title"/>
+                <TextBox x:Name="TitleTextBox"/>
+
+                <TextBlock Text="Story Goal"/>
+                <TextBox x:Name="StoryGoalTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Romance Thread (Optional)"/>
+                <TextBox x:Name="RomanceThreadTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Subplot Threads"/>
+                <TextBox x:Name="SubplotThreadsTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Additional"/>
+                <TextBox x:Name="AdditionalTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Plot Tension"/>
+                <TextBox x:Name="PlotTensionTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Romantic/Sexual Tension"/>
+                <TextBox x:Name="RomanticSexualTensionTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Release"/>
+                <TextBox x:Name="ReleaseTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Downtime"/>
+                <TextBox x:Name="DowntimeTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Black Moment"/>
+                <TextBox x:Name="BlackMomentTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Resolution"/>
+                <TextBox x:Name="ResolutionTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Text="After Effects of Resolution"/>
+                <TextBox x:Name="AfterEffectsTextBox" AcceptsReturn="True" TextWrapping="Wrap"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

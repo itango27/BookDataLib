@@ -1,13 +1,19 @@
-﻿using BookDataLib.Model;
+using BookData.Services.Views;
+using BookDataLib.Model;
 using HelperLib.Controllers;
 using HelperLib.Services;
 using HelperLib.ViewModels;
+using Microsoft.CodeAnalysis.Classification;
+using Microsoft.Identity.Client;
+using System.ComponentModel;
 using System.DirectoryServices.ActiveDirectory;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TryBookDataLib.Layout;
 using TryBookDataLib.ViewModels;
+using static ICSharpCode.Decompiler.IL.Transforms.Stepper;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TryBookDataLib.Views
 {
@@ -78,7 +84,7 @@ namespace TryBookDataLib.Views
                     // Click detected
                     if (_draggedNode != null)
                     {
-                        ShowNodeDialog(_draggedNode);
+                        ShowServiceWindow(_draggedNode);
                     }
                 }
 
@@ -86,10 +92,115 @@ namespace TryBookDataLib.Views
                 _draggedNode = null;
             }
         }
+
+        private void ShowServiceWindow(GraphNodeViewModel node)
+        {
+            string className = node.Name;
+            if (node.Name.EndsWith("s"))
+            {
+                className = node.Name.Substring(0, node.Name.Length - 1);
+            }
+            switch (className)
+            {
+                case "Character":
+                    ShowCharacterSketchWindow();
+                    break;
+                case "Plot":
+                    ShowPlotSketchWindow();
+                    break;
+                //case "Style": break;
+                //case "Theme": break;
+                //case "Chapter": break;
+                //case "CharacterArc": break;
+                //case "NarrativeThread": break;
+                //case "Motif": break;
+                //case "Scene": break;
+                //case "ArcStage": break;
+                //case "Dialogue": break;
+                //case "BookEvent": break;
+                //case "LayerScene": break;
+                //case "MotifScene": break;
+                //case "PacingInfo": break;
+                //case "Conflict": break;
+                //case "NarrativeStructure": break;
+                //case "Novel": break;
+                //case "PointsOfView": 
+                //    break;
+                //case "Setting": break;
+                //case "Tone": break;
+                //case "FramingDevice": break;
+                //case "Layer": break;
+                default:
+                    ShowNodeDialog(node);
+
+                    break;
+            }
+        }
+
+        private CharacterSketchWindow charWin = null;
+        private void ShowCharacterSketchWindow()
+        {
+            if (charWin == null)
+            {
+                charWin = CharacterSketchWindow.Create();
+                charWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                charWin.Closing += new CancelEventHandler((object? sender, CancelEventArgs e) =>
+                {
+                    charWin = null;
+                });
+                charWin.Show();
+            }
+
+            if (charWin.IsVisible)
+            {
+                if (charWin.WindowState == WindowState.Minimized)
+                    charWin.WindowState = WindowState.Normal;
+
+                charWin.Topmost = true;    // pop to front
+                charWin.Topmost = false;   // reset
+                charWin.Activate();
+            }
+        }
+
+        private PlotSketchWindow plotWin = null;
+        private void ShowPlotSketchWindow()
+        {
+            if (plotWin == null)
+            {
+                plotWin = PlotSketchWindow.Create();
+                plotWin.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                plotWin.Closing += new CancelEventHandler((object? sender, CancelEventArgs e) =>
+                {
+                    plotWin = null;
+                });
+                plotWin.Show();
+            }
+
+            if (plotWin.IsVisible)
+            {
+                if (plotWin.WindowState == WindowState.Minimized)
+                    plotWin.WindowState = WindowState.Normal;
+
+                plotWin.Topmost = true;    // pop to front
+                plotWin.Topmost = false;   // reset
+                plotWin.Activate();
+            }
+        }
+
         private void ShowNodeDialog(GraphNodeViewModel node)
         {
-            var className = node.Name.Substring(0, node.Name.Length - 1);
+            string className = node.Name;
+            if (node.Name.EndsWith("s"))
+            {
+                className = node.Name.Substring(0, node.Name.Length - 1);
+            }
+            else if (node.Name.Equals("PointsOfView"))
+            {
+                className = "PointOfView";
+            }
             var controller = ServiceLocator.Get<Controller>();
+
+
             var found = controller.MakeDynamicDataInstance(className);
 
             var vvm = controller.WireUPDynamicVvm(found, false);
@@ -98,9 +209,11 @@ namespace TryBookDataLib.Views
 
             //vm.Item = found;
 
-            var win = CreateWin(vvm.vw as UserControl);
+            RoutedEventHandler Vm_RequestOk = null, Vm_RequestClose = null;
 
-            var Vm_RequestOk = new RoutedEventHandler((object sender, RoutedEventArgs e) =>
+            var win = CreateWin(node, vvm.vw as UserControl);
+
+            Vm_RequestOk = new RoutedEventHandler((object sender, RoutedEventArgs e) =>
             {
                 //GenericViewModel<Data> sendervm = sender as GenericViewModel<Data>;
 
@@ -112,25 +225,34 @@ namespace TryBookDataLib.Views
                 Type genType = vvm.vmType.GetGenericArguments().Single();
                 string genTypeName = vvm.vmType.GetGenericArguments().Single().Name;
                 win.Close();
+
+                (vvm.vm as WorkspaceViewModel).RequestOk -= Vm_RequestOk;
+                (vvm.vm as WorkspaceViewModel).RequestClose -= Vm_RequestClose;
+
             });
             (vvm.vm as WorkspaceViewModel).RequestOk += Vm_RequestOk;
 
-            var Vm_RequestClose = new RoutedEventHandler((object sender, RoutedEventArgs e) =>
+            Vm_RequestClose = new RoutedEventHandler((object sender, RoutedEventArgs e) =>
             {
                 win.Close();
+
+                (vvm.vm as WorkspaceViewModel).RequestOk -= Vm_RequestOk;
+                (vvm.vm as WorkspaceViewModel).RequestClose -= Vm_RequestClose;
+
             });
             (vvm.vm as WorkspaceViewModel).RequestClose += Vm_RequestClose;
 
             win.Content = vvm.vw;
-            bool? winres = win.ShowDialog();
+            /*bool? winres =*/ win.Show();
 
-            (vvm.vm as WorkspaceViewModel).RequestOk -= Vm_RequestOk;
-            (vvm.vm as WorkspaceViewModel).RequestClose -= Vm_RequestClose;
+            //(vvm.vm as WorkspaceViewModel).RequestOk -= Vm_RequestOk;
+            //(vvm.vm as WorkspaceViewModel).RequestClose -= Vm_RequestClose;
         }
-        private Window CreateWin(UserControl view)
+        private Window CreateWin(GraphNodeViewModel node, UserControl view)
         {
             Window win = new Window();
             win = new Window();
+            win.Title = node.Name;
             win.Content = view;
             win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             win.SizeToContent = SizeToContent.WidthAndHeight;
@@ -146,6 +268,7 @@ namespace TryBookDataLib.Views
             win.Top = (screenHeight / 2) - (windowHeight / 2);
         }
 
+        bool isLoaded = false;
         private void GraphView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             vm = ServiceLocator.Get<GraphViewModel>();
@@ -154,18 +277,25 @@ namespace TryBookDataLib.Views
             if (layoutengine != null)
             {
                 layoutengine.SetCanvasSize(GraphCanvas.ActualWidth, GraphCanvas.ActualHeight);
+
+
+                if (isLoaded)
+                {
+                    var actualSize = new Size(GraphCanvas.ActualWidth, GraphCanvas.ActualHeight);
+                    vm.StartLayout(actualSize);
+                }
             }
         }
         private void GraphView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             vm = ServiceLocator.Get<GraphViewModel>();
-            vm.Initialize();
+            vm.InitializeVRelsView();
 
             DataContext = vm;
 
             var actualSize = new Size(GraphCanvas.ActualWidth, GraphCanvas.ActualHeight);
-
             vm.StartLayout(actualSize);
+            isLoaded = true;
         }
     }
 }

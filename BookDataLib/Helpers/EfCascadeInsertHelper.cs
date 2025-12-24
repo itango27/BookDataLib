@@ -1,4 +1,4 @@
-﻿using BookDataLib.Model;
+using BookDataLib.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,13 +14,13 @@ public static class EfCascadeInsertHelper
     {
         var scene = new Scene { Id = 1, Title = "Climax" };
         var thread = new NarrativeThread { Id = 1, Name = "Hero's Journey" };
-        var evt = new Event { Id = 1, Description = "The battle", SceneId = 1, ThreadId = 1 };
+        var evt = new BookEvent { Id = 1, Description = "The battle", SceneId = 1, ThreadId = 1 };
 
         var allData = new Dictionary<Type, IEnumerable<object>>
         {
             [typeof(Scene)] = new[] { scene },
             [typeof(NarrativeThread)] = new[] { thread },
-            [typeof(Event)] = new[] { evt },
+            [typeof(BookEvent)] = new[] { evt },
         };
 
         EfCascadeInsertHelper.InsertEntitiesInDependencyOrderAsync(context, allData).RunSynchronously();

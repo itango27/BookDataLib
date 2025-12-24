@@ -1,10 +1,11 @@
+using BookDataLib.Graph;
 using BookDataLib.Model;
 using HelperLib.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Forms.Layout;
 using TryBookDataLib.Layout;
 
 namespace TryBookDataLib.ViewModels;
@@ -37,7 +38,7 @@ public class GraphViewModel : INotifyPropertyChanged
     {
     }
 
-    public void Initialize()
+    public void InitializeVRelsView()
     {
         var vrels = VRelsView.Read();
         var nodesEdges = VRelsView.BuildGraphFromVRels(vrels);
@@ -58,6 +59,19 @@ public class GraphViewModel : INotifyPropertyChanged
             ));
 
         Edges = new ObservableCollection<GraphEdgeViewModel>(edgeViewModels);
+    }
+
+    public void InitilizeStateModel()
+    {
+        // Load your JSON
+        var model = StateModelBuilder.Load(@"T:\ChatGPT\Final Novel State Model.json");
+        var builder = new StateModelBuilder();
+        builder.Build(model);
+        var adapter = new StateModelGraphAdapter();
+        adapter.Convert(model);
+
+        var layoutEngine = ServiceLocator.Get<ForceDirectedLayoutEngine>();
+        layoutEngine.ApplyLayout(Nodes, Edges);
     }
 
     public void StartLayout(Size actualSize)

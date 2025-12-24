@@ -11,6 +11,7 @@
 
     <Canvas x:Name="GraphCanvas">
         <!-- Edge lines -->
+        <ComboBox IsEditable="True"/>
         <ItemsControl ItemsSource="{Binding Edges}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

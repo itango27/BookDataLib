@@ -1,4 +1,4 @@
-﻿using BookDataLib.Model;
+using BookDataLib.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
@@ -23,8 +23,8 @@ public static class EfCascadeDeleteHelper
 
         EfCascadeDeleteHelper.DeleteAllEntitiesInDependencyOrderAsync(context, (type, queryable) =>
         {
-            if (type == typeof(Event))
-                return queryable.Cast<Event>().Where(e => e.SceneId == targetSceneId);
+            if (type == typeof(BookEvent))
+                return queryable.Cast<BookEvent>().Where(e => e.SceneId == targetSceneId);
             if (type == typeof(MotifScene))
                 return queryable.Cast<MotifScene>().Where(ms => ms.SceneId == targetSceneId);
             if (type == typeof(LayerScene))

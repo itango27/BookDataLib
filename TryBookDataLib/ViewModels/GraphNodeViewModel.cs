@@ -1,4 +1,4 @@
-﻿using BookDataLib.Model;
+using BookDataLib.Model;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

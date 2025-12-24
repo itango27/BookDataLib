@@ -1,4 +1,4 @@
-﻿using HelperLib.Services;
+using HelperLib.Services;
 using System.Windows;
 using TryBookDataLib.ViewModels;
 
